@@ -1,3 +1,14 @@
+# AppTaskPop
+
+## 🚀 Arquitectura y Enfoques de Desarrollo
+
+Este proyecto fue desarrollado utilizando dos enfoques diferentes para la comunicación con la base de datos (PostgreSQL + Prisma) para demostrar dominio en distintos patrones de Next.js. Puedes explorar ambos enfoques cambiando de rama en este repositorio:
+
+- **Rama `main` (Actual):** Implementación moderna utilizando **Server Actions** de Next.js para mutar y consultar datos directamente desde el servidor.
+- **Rama `legacy-api-rest`:** Implementación utilizando **Route Handlers** tradicionales (`/api/todos`) para operaciones CRUD consumidas desde el cliente mediante peticiones HTTP (`fetch`).
+
+---
+
 ## Development
 
 Pasos para ejecutar el proyecto en desarrollo.
