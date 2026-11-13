@@ -1,8 +1,13 @@
 import { Suspense } from "react";
-import { WidgetItem } from "@/src/components"; // Ajusta tus importaciones según tu proyecto
+import { WidgetItem } from "@/src/components";
 import { NewTodo, TodoList } from "@/src/todos";
 import prisma from "@/src/lib/prisma";
 import { FiClipboard, FiCheckCircle } from "react-icons/fi";
+
+export const metadata = {
+  title: "Listado de Todos",
+  description: "SEO Title",
+};
 
 // 1. COMPONENTE ASÍNCRONO: Se encarga de llamar a Prisma y preparar la vista
 async function DashboardContent() {

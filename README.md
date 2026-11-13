@@ -1,11 +1,16 @@
 # AppTaskPop
 
-## 🚀 Arquitectura y Enfoques de Desarrollo
+Aplicación de gestión de tareas desarrollada con Next.js, React y TypeScript. Permite organizar tareas y explorar diferentes funcionalidades de Next.js, utilizando Prisma ORM para gestionar los datos almacenados en una base de datos PostgreSQL.
 
-Este proyecto fue desarrollado utilizando dos enfoques diferentes para la comunicación con la base de datos (PostgreSQL + Prisma) para demostrar dominio en distintos patrones de Next.js. Puedes explorar ambos enfoques cambiando de rama en este repositorio:
+## Arquitectura y Enfoques de Desarrollo
 
-- **Rama `main` (Actual):** Implementación moderna utilizando **Server Actions** de Next.js para mutar y consultar datos directamente desde el servidor.
-- **Rama `legacy-api-rest`:** Implementación utilizando **Route Handlers** tradicionales (`/api/todos`) para operaciones CRUD consumidas desde el cliente mediante peticiones HTTP (`fetch`).
+Este proyecto incluye dos implementaciones diferentes para trabajar con los datos, con el objetivo de explorar y comparar distintas formas de comunicación entre el cliente y el servidor.
+
+Puedes consultar ambas versiones cambiando de rama en este repositorio:
+
+- **Rama `main` (Actual):** Utiliza **Server Components** para realizar consultas desde el servidor y **Server Actions** para ejecutar operaciones de creación, actualización y eliminación, interactuando directamente con Prisma y PostgreSQL.
+
+- **Rama `legacy-api-rest`:** Implementación utilizando **Route Handlers** de Next.js para crear endpoints REST (`/api/todos`), que se consumen desde el cliente mediante peticiones HTTP (`fetch`). Incluye las operaciones CRUD (crear, consultar, actualizar y eliminar).
 
 ---
 
@@ -38,11 +43,11 @@ npx prisma migrate dev
 
 Esto crea y aplica las migraciones necesarias para sincronizar la estructura de la base de datos.
 
-### 5. Generar datos iniciales (SEED)
+### 5. Generar el cliente de Prisma
 
-Con el proyecto en ejecución, acceder a:
-
-`http://localhost:3000/api/seed`
+```bash
+npx prisma generate
+```
 
 ### 6. Iniciar la aplicación
 
@@ -51,6 +56,12 @@ npm run dev
 ```
 
 Abrir `http://localhost:3000`.
+
+### 7. Generar datos iniciales (SEED)
+
+Con el proyecto en ejecución, acceder a:
+
+`http://localhost:3000/api/seed`
 
 ## Prisma
 

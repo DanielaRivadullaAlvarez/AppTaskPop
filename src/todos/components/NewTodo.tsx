@@ -2,30 +2,23 @@
 
 import { FormEvent, useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import { useRouter } from "next/navigation";
-import * as todosApi from "../helpers/todos";
+import { addTodo } from "../actions/todo-actions";
 
 export const NewTodo = () => {
-  // 1. Estado para guardar lo que el usuario escribe
+  // Estado para guardar lo que el usuario escribe
   const [description, setDescription] = useState("");
-  // 2. Necesitamos el router para recargar la página cuando se guarde la tarea
-  const router = useRouter();
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault(); // Evitamos que la página se recargue por defecto
 
-    // Si el texto está vacío, no hacemos nada
     if (description.trim().length === 0) return;
 
-    /// 3. Lógica para poner la primera letra en mayúscula y el resto en minúscula
     const tareaAgregada =
       description.charAt(0).toUpperCase() + description.slice(1).toLowerCase();
-    // 4. Llamamos al endpoint a través de nuestro helper
-    await todosApi.createTodo(tareaAgregada);
 
-    // 5. Limpiamos el input y refrescamos la pantalla para que aparezca la nueva tarea
+    await addTodo(tareaAgregada);
+    // Limpiamos el input y refrescamos la pantalla para que aparezca la nueva tarea
     setDescription("");
-    router.refresh();
   };
 
   return (

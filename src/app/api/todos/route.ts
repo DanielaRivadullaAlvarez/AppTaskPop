@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server"; // Importante: usar NextRequest
+import { NextResponse, NextRequest } from "next/server";
 import prisma from "../../../lib/prisma";
 import * as yup from "yup";
 
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     const body = await postSchema.validate(await request.json());
 
     // 2. Extraemos estrictamente lo que permitimos.
-    // Todo lo que sea extra o malicioso (como un ID inventado) se destruye aquí.
+
     const { description, complete } = body;
 
     // 3. Enviamos a Prisma el paquete de datos totalmente limpio.

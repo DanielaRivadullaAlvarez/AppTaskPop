@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import prisma from "../../../lib/prisma";
 
 export async function GET(request: Request) {
-  await prisma.todo.deleteMany(); // delete * from todo
+  // Protección para que solo funcione en desarrollo
+  if (process.env.NODE_ENV !== "development") {
+    return new Response("Not Found", { status: 404 });
+  }
+  await prisma.todo.deleteMany();
 
   await prisma.todo.createMany({
     data: [

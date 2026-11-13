@@ -18,7 +18,7 @@ const menuItem = [
   {
     icon: <FaListUl size={18} />,
     title: "Server Action",
-    path: "/dashboard/server-action",
+    path: "/dashboard/server-todos",
   },
 ];
 
@@ -45,7 +45,7 @@ export const Sidebar = ({ isOpen, onClose }: Props) => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Logo (¡Intacto!) */}
+        {/* Logo  */}
         <Link
           href="/dashboard"
           className="flex items-center gap-3"
@@ -60,11 +60,11 @@ export const Sidebar = ({ isOpen, onClose }: Props) => {
           </span>
         </Link>
 
-        {/* Navegación (¡Intacta!) */}
+        {/* Navegación */}
         <nav className="mt-12">
           <ul className="space-y-2">
             {menuItem.map((item) => (
-              // Envolvemos tu SidebarItem en un div para que al hacer clic en móvil se cierre el menú automáticamente
+              // Envolvemos SidebarItem en un div para que al hacer clic en móvil se cierre el menú automáticamente
               <div key={item.path} onClick={onClose}>
                 <SidebarItem {...item} />
               </div>

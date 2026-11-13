@@ -3,29 +3,17 @@
 import { Todo } from "@prisma/client";
 import { TodoItem } from "../../todos/components/TodoItem";
 
-import * as todosApi from "../helpers/todos"; // Ajusta esta ruta a donde guardaste todos.ts
-import { useRouter } from "next/navigation";
 import { FiTrash } from "react-icons/fi";
+import { deleteCompleted, toggleTodo } from "../actions/todo-actions";
 
 interface Props {
   todos?: Todo[];
 }
 
 export const TodoList = ({ todos = [] }: Props) => {
-  const router = useRouter();
-
   // Filtramos las tareas para separarlas en dos grupos
   const pendientes = todos.filter((todo) => !todo.complete);
   const completadas = todos.filter((todo) => todo.complete);
-
-  const toggleTodo = async (id: string, complete: boolean) => {
-    await todosApi.updateTodo(id, complete);
-    router.refresh();
-  };
-  const deleteCompleted = async () => {
-    await todosApi.deleteCompletedTodos();
-    router.refresh();
-  };
 
   return (
     <section className="w-full">
@@ -36,7 +24,7 @@ export const TodoList = ({ todos = [] }: Props) => {
             Mis tareas
           </h2>
           <span className="rounded-full bg-linear-to-r from-purple-600 to-purple-400 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
-            {todos.length} tareas
+            {todos.length} tareas totales
           </span>
         </div>
 

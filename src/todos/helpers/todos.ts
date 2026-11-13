@@ -1,55 +1,57 @@
+//IMPLEMENTACION ANTES DEL SERVER ACTIONS
 
-import { Todo } from "@prisma/client";
 
-export const updateTodo = async (
-  id: string,
-  complete: boolean
-): Promise<Todo> => {
-  const body = { complete };
+// import { Todo } from "@prisma/client";
 
-  const res = await fetch(`/api/todos/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// export const updateTodo = async (
+//   id: string,
+//   complete: boolean
+// ): Promise<Todo> => {
+//   const body = { complete };
 
-  if (!res.ok) {
-    throw new Error("Error al actualizar la tarea");
-  }
+//   const res = await fetch(`/api/todos/${id}`, {
+//     method: "PUT",
+//     body: JSON.stringify(body),
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  return res.json();
-};
+//   if (!res.ok) {
+//     throw new Error("Error al actualizar la tarea");
+//   }
 
-export const createTodo = async (
-  description: string
-): Promise<Todo> => {
-  const body = { description };
+//   return res.json();
+// };
 
-  const res = await fetch("/api/todos", {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// export const createTodo = async (
+//   description: string
+// ): Promise<Todo> => {
+//   const body = { description };
 
-  if (!res.ok) {
-    throw new Error("Error al crear la tarea");
-  }
+//   const res = await fetch("/api/todos", {
+//     method: "POST",
+//     body: JSON.stringify(body),
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  return res.json();
-};
+//   if (!res.ok) {
+//     throw new Error("Error al crear la tarea");
+//   }
 
-export const deleteCompletedTodos = async (): Promise<boolean> => {
-  const res = await fetch("/api/todos", {
-    method: "DELETE",
-  });
+//   return res.json();
+// };
 
-  if (!res.ok) {
-    throw new Error("Error al eliminar las tareas completadas");
-  }
+// export const deleteCompletedTodos = async (): Promise<boolean> => {
+//   const res = await fetch("/api/todos", {
+//     method: "DELETE",
+//   });
 
-  return true;
-};
+//   if (!res.ok) {
+//     throw new Error("Error al eliminar las tareas completadas");
+//   }
+
+//   return true;
+// };
