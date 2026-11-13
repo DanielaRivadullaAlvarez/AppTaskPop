@@ -1,3 +1,7 @@
+# AppTaskPop (Versión Legacy)
+
+> **Nota:**Esta rama contiene la implementación anterior de AppTaskPop mediante Route Handlers y API REST. Para consultar la versión actual del proyecto, visita la rama `main`, donde se implementa el enfoque basado en Server Actions.
+
 ## Development
 
 Pasos para ejecutar el proyecto en desarrollo.
@@ -27,11 +31,11 @@ npx prisma migrate dev
 
 Esto crea y aplica las migraciones necesarias para sincronizar la estructura de la base de datos.
 
-### 5. Generar datos iniciales (SEED)
+### 5. Generar el cliente de Prisma
 
-Con el proyecto en ejecución, acceder a:
-
-`http://localhost:3000/api/seed`
+```bash
+npx prisma generate
+```
 
 ### 6. Iniciar la aplicación
 
@@ -39,7 +43,13 @@ Con el proyecto en ejecución, acceder a:
 npm run dev
 ```
 
-Abrir `http://localhost:3000`.
+Abrir [http://localhost:3000](http://localhost:3000).
+
+### 7. Generar datos iniciales (Seed)
+
+Con la aplicación en ejecución, acceder a:
+
+[http://localhost:3000/api/seed](http://localhost:3000/api/seed)
 
 ## Prisma
 
@@ -64,7 +74,3 @@ npx prisma studio
 - Prisma ORM
 - Tailwind CSS
 - Yup
-
-# Prod
-
-# Stage
