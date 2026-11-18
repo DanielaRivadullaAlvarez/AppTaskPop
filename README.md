@@ -1,92 +1,57 @@
-# AppTaskPop
+# TaskPop
 
-Aplicación de gestión de tareas desarrollada con Next.js, React y TypeScript. Permite organizar tareas y explorar diferentes funcionalidades de Next.js, utilizando Prisma ORM para gestionar los datos almacenados en una base de datos PostgreSQL.
+Aplicación web de gestión de tareas desarrollada con **Next.js 16**, **React 19**, **TypeScript**, **Prisma ORM** y **PostgreSQL**. Permite organizar tareas diarias con actualizaciones optimistas en la interfaz y cuenta con una papelera de reciclaje (borrado lógico) para restaurar o eliminar tareas definitivamente.
+
+## Funcionalidades principales
+
+- **Dashboard resumen (Home):** Contadores en tiempo real de tareas totales y completadas junto con creación rápida de nuevas tareas.
+- **Gestión de tareas (Mis tareas):** Creación con validación en cliente y servidor (Yup), marcado instantáneo mediante _Optimistic UI_ (`useOptimistic`) y envío en lote de tareas completadas a la papelera.
+- **Papelera (Tareas anuladas):** Selección individual o múltiple para restablecer tareas a pendientes o eliminarlas definitivamente con confirmación previa.
+- **Diseño responsive:** Interfaz adaptada a móvil, tablet y escritorio con menú lateral deslizable.
 
 ## Arquitectura y Enfoques de Desarrollo
 
-Este proyecto incluye dos implementaciones diferentes para trabajar con los datos, con el objetivo de explorar y comparar distintas formas de comunicación entre el cliente y el servidor.
+Este repositorio incluye dos implementaciones para comparar distintas formas de comunicación entre cliente y servidor:
 
-Puedes consultar ambas versiones cambiando de rama en este repositorio:
+- **Rama `main` (Actual):** Utiliza **Server Components** con streaming (`Suspense`) para consultar datos desde el servidor y **Server Actions** para las mutaciones sobre PostgreSQL con Prisma.
+- **Rama `legacy-api-rest`:** Implementación previa con **Route Handlers** (`/api/todos`) consumidos mediante `fetch`.
 
-- **Rama `main` (Actual):** Utiliza **Server Components** para realizar consultas desde el servidor y **Server Actions** para ejecutar operaciones de creación, actualización y eliminación, interactuando directamente con Prisma y PostgreSQL.
+## Ejecución en Desarrollo (Local)
 
-- **Rama `legacy-api-rest`:** Implementación utilizando **Route Handlers** de Next.js para crear endpoints REST (`/api/todos`), que se consumen desde el cliente mediante peticiones HTTP (`fetch`). Incluye las operaciones CRUD (crear, consultar, actualizar y eliminar).
+1.  **Instalar dependencias:**
 
----
+    npm install
 
-## Development
+2.  **Levantar la base de datos PostgreSQL con Docker:**
 
-Pasos para ejecutar el proyecto en desarrollo.
+    docker compose up -d
 
-### 1. Instalar dependencias
+3.  **Configurar variables de entorno:**
+    Copia `.env.template` a un nuevo archivo `.env` y ajusta `DATABASE_URL` si es necesario.
 
-```bash
-npm install
-```
+4.  **Aplicar migraciones y generar el cliente de Prisma:**
 
-### 2. Levantar la base de datos
+    npx prisma migrate dev
+    npx prisma generate
 
-```bash
-docker compose up -d
-```
+5.  **Iniciar el servidor de desarrollo:**
 
-### 3. Configurar las variables de entorno
+        npm run dev
 
-- Copiar `.env.template` y crear un archivo `.env`.
-- Completar las variables de entorno necesarias.
+    Abre `http://localhost:3000` en tu navegador. _(Opcional: visita `http://localhost:3000/api/seed` en desarrollo para cargar tareas de ejemplo)._
 
-### 4. Ejecutar las migraciones
+## Despliegue en Producción (Vercel + PostgreSQL en la nube)
 
-```bash
-npx prisma migrate dev
-```
+1. Crea una base de datos PostgreSQL externa (por ejemplo en **Neon** o **Supabase**).
+2. Configura la variable de entorno `DATABASE_URL` en el panel de **Vercel** con la URL de conexión proporcionada por el proveedor.
+3. Ejecuta las migraciones contra la base de datos de producción mediante:
 
-Esto crea y aplica las migraciones necesarias para sincronizar la estructura de la base de datos.
+   npx prisma migrate deploy
 
-### 5. Generar el cliente de Prisma
+## Tecnologías utilizadas
 
-```bash
-npx prisma generate
-```
-
-### 6. Iniciar la aplicación
-
-```bash
-npm run dev
-```
-
-Abrir `http://localhost:3000`.
-
-### 7. Generar datos iniciales (SEED)
-
-Con el proyecto en ejecución, acceder a:
-
-`http://localhost:3000/api/seed`
-
-## Prisma
-
-Comandos principales:
-
-```bash
-npx prisma migrate dev
-npx prisma generate
-npx prisma studio
-```
-
-- `migrate dev`: crea y aplica migraciones en desarrollo.
-- `generate`: genera el cliente de Prisma.
-- `studio`: abre la interfaz visual para consultar y gestionar los datos.
-
-## Technologies
-
-- Next.js
-- React
+- Next.js 16 (App Router) & React 19
 - TypeScript
-- PostgreSQL
-- Prisma ORM
-- Tailwind CSS
+- Prisma ORM & PostgreSQL
+- Tailwind CSS v4
 - Yup
-
-# Prod
-
-# Stage

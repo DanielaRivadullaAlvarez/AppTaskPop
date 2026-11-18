@@ -36,7 +36,11 @@ export const TodoItem = ({ todo, toggleTodo }: Props) => {
 
   return (
     <div className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm border border-[#f5f1ff] transition-all hover:border-[#eeeaf6] hover:shadow-md">
-      <div
+      <button
+        type="button"
+        aria-label={`Marcar "${todoOptimistic.description}" como ${
+          todoOptimistic.complete ? "pendiente" : "completada"
+        }`}
         onClick={onToggleTodo}
         className={`flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors ${
           todoOptimistic.complete
@@ -45,7 +49,7 @@ export const TodoItem = ({ todo, toggleTodo }: Props) => {
         }`}
       >
         {todoOptimistic.complete && <FiCheck size={14} strokeWidth={3} />}
-      </div>
+      </button>
 
       <p
         className={`text-sm font-bold truncate ${

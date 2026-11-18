@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { SidebarItem } from "./SidebarItem";
-import { IoCalendarOutline } from "react-icons/io5";
+import { IoCalendarOutline, IoHomeOutline } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
-import { FaListUl } from "react-icons/fa";
+
 
 const menuItem = [
   {
-    icon: <IoCalendarOutline size={20} />,
-    title: "Dashboard",
+    icon: <IoHomeOutline size={20} />,
+    title: "Home",
     path: "/dashboard",
   },
   {
-    icon: <MdDashboard size={20} />,
-    title: "Rest TODOS",
+    icon: <IoCalendarOutline size={20} />,
+    title: "Mis tareas",
     path: "/dashboard/rest-todos",
   },
   {
-    icon: <FaListUl size={18} />,
-    title: "Server Action",
-    path: "/dashboard/server-todos",
+    icon: <MdDashboard size={18} />,
+    title: "Tareas anuladas",
+    path: "/dashboard/deleted-todos",
   },
 ];
 

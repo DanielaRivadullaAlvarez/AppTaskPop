@@ -36,7 +36,7 @@ export const TodoList = ({ todos = [] }: Props) => {
             className="flex items-center justify-center gap-2 rounded-2xl bg-[#ffe5e9] px-4 py-2 text-xs font-extrabold text-[#c96c7f] transition hover:bg-[#ffcdd6]"
           >
             <FiTrash size={14} />
-            Borrar completadas ({completadas.length})
+            Mover a anuladas ({completadas.length})
           </button>
         )}
       </div>

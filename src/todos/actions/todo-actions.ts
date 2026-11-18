@@ -20,7 +20,7 @@ export const toggleTodo = async (
   const todo = await prisma.todo.findFirst({ where: { id } });
 
   if (!todo) {
-    throw `Todo con id ${id} no encontrado`;
+    throw new Error(`Todo con id ${id} no encontrado`);
   }
 
   const updatedTodo = await prisma.todo.update({
@@ -46,17 +46,60 @@ export const addTodo = async (description: string) => {
   return todo;
 };
 
+// Mueve las completadas a "Tareas anuladas" y no las borra de la BD
 export const deleteCompleted = async () => {
   try {
-    await prisma.todo.deleteMany({
-      where: { complete: true },
+    await prisma.todo.updateMany({
+      where: {
+        complete: true,
+        deleted: false,
+      },
+      data: {
+        deleted: true,
+      },
     });
     revalidatePath("/dashboard", "layout");
 
-    return { message: "Completadas borradas" };
-  } catch (error) {
+    return { message: "Completadas movidas a tareas anuladas" };
+  } catch {
     return {
-      message: "Error al borrar tareas",
+      message: "Error al anular tareas",
+    };
+  }
+};
+
+// Recupera las tareas tildadas y las devuelve como pendientes a "Mis tareas"
+export const restoreTodos = async (ids: string[]) => {
+  try {
+    await prisma.todo.updateMany({
+      where: { id: { in: ids }, deleted: true },
+      data: {
+        deleted: false,
+        complete: false, // Vuelven como tareas pendientes
+      },
+    });
+    revalidatePath("/dashboard", "layout");
+
+    return { message: "Tareas recuperadas" };
+  } catch {
+    return {
+      message: "Error al recuperar tareas",
+    };
+  }
+};
+
+// Elimina definitivamente de PostgreSQL solo las tareas tildadas en la papelera
+export const hardDeleteTodos = async (ids: string[]) => {
+  try {
+    await prisma.todo.deleteMany({
+      where: { id: { in: ids }, deleted: true },
+    });
+    revalidatePath("/dashboard", "layout");
+
+    return { message: "Tareas eliminadas definitivamente" };
+  } catch {
+    return {
+      message: "Error al eliminar definitivamente",
     };
   }
 };

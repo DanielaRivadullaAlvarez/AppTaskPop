@@ -1,15 +1,19 @@
 import { TodoList } from "@/src/todos";
 import prisma from "../../../lib/prisma";
 import { Suspense } from "react";
+import { connection } from "next/server";
 
 export const metadata = {
-  title: "Listado de Todos",
-  description: "SEO Title",
+  title: "Mis tareas",
+  description: "Listado de tareas pendientes y completadas",
 };
 
 // Componente que consulta la base de datos
 async function RestTodos() {
+  await connection();
+
   const todos = await prisma.todo.findMany({
+    where: { deleted: false }, // SOLO trae las que NO están en la papelera
     orderBy: { description: "asc" },
   });
 

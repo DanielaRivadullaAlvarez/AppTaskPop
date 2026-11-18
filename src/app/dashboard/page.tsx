@@ -1,18 +1,22 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { WidgetItem } from "@/src/components";
 import { NewTodo, TodoList } from "@/src/todos";
 import prisma from "@/src/lib/prisma";
 import { FiClipboard, FiCheckCircle } from "react-icons/fi";
 
 export const metadata = {
-  title: "Listado de Todos",
-  description: "SEO Title",
+  title: "Home | TaskPop",
+  description: "Resumen de tus tareas en TaskPop",
 };
 
 // 1. COMPONENTE ASÍNCRONO: Se encarga de llamar a Prisma y preparar la vista
 async function DashboardContent() {
-  // Traemos las tareas con el doble ordenamiento para que no salten
+  await connection();
+
+  // Traemos SOLO las tareas activas (no anuladas) con el doble ordenamiento
   const todos = await prisma.todo.findMany({
+    where: { deleted: false },
     orderBy: [{ description: "asc" }, { id: "asc" }],
   });
 
@@ -58,7 +62,6 @@ async function DashboardContent() {
 // 2. PÁGINA PRINCIPAL: Componente normal (NO async) que usa el Suspense
 export default function DashboardPage() {
   return (
-    // Mientras la base de datos responde, muestra este mensaje bonito estilo TaskPop
     <Suspense
       fallback={
         <div className="flex h-40 items-center justify-center text-sm font-bold text-[#8058d3]">
