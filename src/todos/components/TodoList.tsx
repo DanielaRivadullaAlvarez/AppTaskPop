@@ -18,13 +18,14 @@ export const TodoList = ({ todos = [] }: Props) => {
   return (
     <section className="w-full">
       {/* Encabezado Principal con el botón de eliminar y contador general */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-xl font-extrabold tracking-tight text-[#242038]">
             Mis tareas
           </h2>
-          <span className="rounded-full bg-linear-to-r from-purple-600 to-purple-400 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
-            {todos.length} tareas totales
+          <span className="whitespace-nowrap rounded-full bg-linear-to-r from-purple-600 to-purple-400 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
+            {todos.length}{" "}
+            {todos.length === 1 ? "tarea total" : "tareas totales"}
           </span>
         </div>
 
@@ -33,9 +34,9 @@ export const TodoList = ({ todos = [] }: Props) => {
           <button
             onClick={deleteCompleted}
             type="button"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-[#ffe5e9] px-4 py-2 text-xs font-extrabold text-[#c96c7f] transition hover:bg-[#ffcdd6]"
+            className="flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-[#ffe5e9] px-4 py-2 text-xs font-extrabold text-[#c96c7f] transition hover:bg-[#ffcdd6]"
           >
-            <FiTrash size={14} />
+            <FiTrash size={14} className="shrink-0" />
             Mover a anuladas ({completadas.length})
           </button>
         )}

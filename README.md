@@ -2,6 +2,8 @@
 
 Aplicación web de gestión de tareas desarrollada con **Next.js 16**, **React 19**, **TypeScript**, **Prisma ORM** y **PostgreSQL**. Permite organizar tareas diarias con actualizaciones optimistas en la interfaz y cuenta con una papelera de reciclaje (borrado lógico) para restaurar o eliminar tareas definitivamente.
 
+🚀 **Demo en vivo:** [https://app-task-pop.vercel.app](https://app-task-pop.vercel.app)
+
 ## Funcionalidades principales
 
 - **Dashboard resumen (Home):** Contadores en tiempo real de tareas totales y completadas junto con creación rápida de nuevas tareas.
@@ -31,8 +33,11 @@ Este repositorio incluye dos implementaciones para comparar distintas formas de 
 
 4.  **Aplicar migraciones y generar el cliente de Prisma:**
 
-    npx prisma migrate dev
-    npx prisma generate
+    ```bash
+    npx prisma migrate dev --config prisma7.config.ts
+    npx prisma generate --config prisma7.config.ts
+
+    ```
 
 5.  **Iniciar el servidor de desarrollo:**
 
