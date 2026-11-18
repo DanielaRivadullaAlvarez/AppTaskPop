@@ -2,7 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { Todo } from "@prisma/client";
-import { IoTrashOutline, IoRefreshOutline, IoCheckmark } from "react-icons/io5";
+import {
+  IoTrashOutline,
+  IoRefreshOutline,
+  IoCheckmark,
+  IoWarningOutline,
+} from "react-icons/io5";
 import { restoreTodos, hardDeleteTodos } from "../actions/todo-actions";
 
 interface Props {
@@ -11,6 +16,7 @@ interface Props {
 
 export const DeletedTodoList = ({ todos }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const toggleSelect = (id: string) => {
@@ -35,25 +41,31 @@ export const DeletedTodoList = ({ todos }: Props) => {
     });
   };
 
-  const handlePermanentDelete = () => {
+  const openDeleteModal = () => {
     if (selectedIds.length === 0) return;
+    setIsConfirmOpen(true);
+  };
 
-    const confirmado = window.confirm(
-      "¿Seguro que quieres eliminar estas tareas definitivamente? Esta acción no se puede deshacer.",
-    );
-
-    if (!confirmado) return;
+  const confirmPermanentDelete = () => {
+    if (selectedIds.length === 0) return;
 
     startTransition(async () => {
       try {
         await hardDeleteTodos(selectedIds);
         setSelectedIds([]);
+        setIsConfirmOpen(false);
       } catch (error) {
         console.error("Error al eliminar las tareas:", error);
         alert("No se pudieron eliminar las tareas.");
       }
     });
   };
+
+  const mensajeConfirmacion =
+    selectedIds.length === 1
+      ? "¿Seguro que quieres eliminar esta tarea definitivamente? Esta acción no se puede deshacer."
+      : `¿Seguro que quieres eliminar estas ${selectedIds.length} tareas definitivamente? Esta acción no se puede deshacer.`;
+
   return (
     <div className="w-full space-y-6">
       {/* Cabecera estilo TaskPop */}
@@ -78,7 +90,7 @@ export const DeletedTodoList = ({ todos }: Props) => {
           </button>
 
           <button
-            onClick={handlePermanentDelete}
+            onClick={openDeleteModal}
             disabled={selectedIds.length === 0 || isPending}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-100 rounded-full hover:bg-red-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
@@ -137,6 +149,60 @@ export const DeletedTodoList = ({ todos }: Props) => {
           );
         })}
       </div>
+
+      {/* Modal de confirmación personalizado */}
+      {isConfirmOpen && (
+        <div
+          onClick={() => !isPending && setIsConfirmOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#242038]/40 p-4 backdrop-blur-xs"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-delete-title"
+            className="w-full max-w-md rounded-[28px] border border-[#f5f1ff] bg-white p-6 shadow-xl"
+          >
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ffe5e9] text-[#c96c7f]">
+              <IoWarningOutline size={26} />
+            </div>
+
+            <h3
+              id="modal-delete-title"
+              className="text-lg font-extrabold text-[#242038]"
+            >
+              {selectedIds.length === 1
+                ? "Eliminar tarea definitivamente"
+                : `Eliminar ${selectedIds.length} tareas definitivamente`}
+            </h3>
+
+            <p className="mt-2 text-sm leading-relaxed text-[#6e6885]">
+              {mensajeConfirmacion}
+            </p>
+
+            <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setIsConfirmOpen(false)}
+                className="rounded-2xl border border-[#eeeaf6] bg-[#fbfaff] px-4 py-2.5 text-sm font-bold text-[#6e6885] transition hover:bg-[#f3effb] disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={confirmPermanentDelete}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-[#ff4d6d] px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#e63e5d] disabled:opacity-50"
+              >
+                <IoTrashOutline size={16} />
+                {isPending ? "Eliminando..." : "Sí, eliminar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
