@@ -1,6 +1,9 @@
-import prisma from "../../../lib/prisma";
+import prisma from "@/src/lib/prisma";
+import { auth } from "@/src/lib/auth";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { DeletedTodoList } from "@/src/todos";
 
 export const metadata = {
@@ -11,8 +14,16 @@ export const metadata = {
 async function DeletedTodos() {
   await connection();
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const todos = await prisma.todo.findMany({
-    where: { deleted: true },
+    where: { deleted: true, userId: session.user.id },
     orderBy: { updatedAt: "desc" },
   });
 

@@ -1,8 +1,10 @@
 "use server";
 
+import { auth } from "@/src/lib/auth";
 import prisma from "@/src/lib/prisma";
 import { Todo } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import * as yup from "yup";
 
 const addTodoSchema = yup.object({
@@ -13,18 +15,31 @@ const addTodoSchema = yup.object({
     .required("La descripción es obligatoria."),
 });
 
+const getUserId = async (): Promise<string> => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    throw new Error("No autorizado");
+  }
+
+  return session.user.id;
+};
+
 export const toggleTodo = async (
   id: string,
   complete: boolean,
 ): Promise<Todo> => {
-  const todo = await prisma.todo.findFirst({ where: { id } });
+  const userId = await getUserId();
+  const todo = await prisma.todo.findFirst({ where: { id, userId } });
 
   if (!todo) {
     throw new Error(`Todo con id ${id} no encontrado`);
   }
 
   const updatedTodo = await prisma.todo.update({
-    where: { id },
+    where: { id, userId },
     data: { complete },
   });
   revalidatePath("/dashboard", "layout");
@@ -33,12 +48,16 @@ export const toggleTodo = async (
 };
 
 export const addTodo = async (description: string) => {
+  const userId = await getUserId();
   const { description: validDescription } = await addTodoSchema.validate({
     description,
   });
 
   const todo = await prisma.todo.create({
-    data: { description: validDescription },
+    data: {
+      description: validDescription,
+      userId,
+    },
   });
 
   revalidatePath("/dashboard", "layout");
@@ -48,9 +67,12 @@ export const addTodo = async (description: string) => {
 
 // Mueve las completadas a "Tareas anuladas" y no las borra de la BD
 export const deleteCompleted = async () => {
+  const userId = await getUserId();
+
   try {
     await prisma.todo.updateMany({
       where: {
+        userId,
         complete: true,
         deleted: false,
       },
@@ -70,9 +92,11 @@ export const deleteCompleted = async () => {
 
 // Recupera las tareas tildadas y las devuelve como pendientes a "Mis tareas"
 export const restoreTodos = async (ids: string[]) => {
+  const userId = await getUserId();
+
   try {
     await prisma.todo.updateMany({
-      where: { id: { in: ids }, deleted: true },
+      where: { id: { in: ids }, userId, deleted: true },
       data: {
         deleted: false,
         complete: false, // Vuelven como tareas pendientes
@@ -90,9 +114,11 @@ export const restoreTodos = async (ids: string[]) => {
 
 // Elimina definitivamente de PostgreSQL solo las tareas tildadas en la papelera
 export const hardDeleteTodos = async (ids: string[]) => {
+  const userId = await getUserId();
+
   try {
     await prisma.todo.deleteMany({
-      where: { id: { in: ids }, deleted: true },
+      where: { id: { in: ids }, userId, deleted: true },
     });
     revalidatePath("/dashboard", "layout");
 

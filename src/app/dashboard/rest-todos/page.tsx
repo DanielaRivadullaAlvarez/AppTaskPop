@@ -1,7 +1,10 @@
 import { TodoList } from "@/src/todos";
-import prisma from "../../../lib/prisma";
+import prisma from "@/src/lib/prisma";
+import { auth } from "@/src/lib/auth";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Mis tareas",
@@ -12,8 +15,16 @@ export const metadata = {
 async function RestTodos() {
   await connection();
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const todos = await prisma.todo.findMany({
-    where: { deleted: false }, // SOLO trae las que NO están en la papelera
+    where: { deleted: false, userId: session.user.id }, // SOLO trae las del usuario conectado que NO están en la papelera
     orderBy: { description: "asc" },
   });
 

@@ -2,7 +2,7 @@
   "name": "admin-todos",
   "version": "0.1.0",
   "private": true,
-"scripts": {
+  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,8 +11,10 @@
     "postinstall": "prisma generate --config prisma7.config.ts"
   },
   "dependencies": {
+    "@better-auth/prisma-adapter": "^1.7.26",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
+    "better-auth": "^1.7.26",
     "dotenv": "^18.0.9",
     "next": "^16.4.6",
     "pg": "^8.23.1",

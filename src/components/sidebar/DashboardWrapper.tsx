@@ -6,15 +6,23 @@ import { FiMenu } from "react-icons/fi";
 
 interface Props {
   children: React.ReactNode;
+  user?: {
+    name: string;
+    email: string;
+  };
 }
 
-export const DashboardWrapper = ({ children }: Props) => {
+export const DashboardWrapper = ({ children, user }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-[#f7f4ff] text-[#242038]">
       {/* Sidebar controlado por el estado */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        user={user}
+      />
 
       <div className="min-w-0 flex-1">
         {/* Header móvil con el botón hamburguesa (Oculto en PC) */}

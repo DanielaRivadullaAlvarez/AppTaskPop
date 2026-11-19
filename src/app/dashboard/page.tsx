@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/src/lib/auth";
 import { WidgetItem } from "@/src/components";
 import { NewTodo, TodoList } from "@/src/todos";
 import prisma from "@/src/lib/prisma";
@@ -14,9 +17,17 @@ export const metadata = {
 async function DashboardContent() {
   await connection();
 
-  // Traemos SOLO las tareas activas (no anuladas) con el doble ordenamiento
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  // Traemos SOLO las tareas activas del usuario conectado
   const todos = await prisma.todo.findMany({
-    where: { deleted: false },
+    where: { deleted: false, userId: session.user.id },
     orderBy: [{ description: "asc" }, { id: "asc" }],
   });
 
